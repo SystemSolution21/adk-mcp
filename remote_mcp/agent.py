@@ -11,9 +11,7 @@ from .prompt import NOTION_PROMPT
 # ---- Load Environment Variables ----
 load_dotenv()
 
-MODEL_NAME: str | None = os.getenv(key="GEMINI_MODEL", default="gemini-2.0-flash")
-if MODEL_NAME is None:
-    raise ValueError("GEMINI_MODEL is not set")
+MODEL_NAME: str = os.getenv(key="GEMINI_MODEL", default="gemini-2.0-flash")
 
 # ---- MCP Library ----
 # https://github.com/modelcontextprotocol/servers
