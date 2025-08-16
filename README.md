@@ -7,13 +7,16 @@ This project demonstrates an Agent Development Kit (ADK) agent that interacts wi
 ```project structure
 adk-mcp/
 ├── local_mcp/
+│   ├── .env.example         # Example environment file with API key
+│   ├── prompt.py            # Prompt for the local SQLite DB agent
 │   ├── agent.py             # The ADK agent for the local SQLite DB
 │   ├── server.py            # The MCP server exposing database tools
 │   ├── create_db.py         # Script to initialize the SQLite database
-│   ├── database.db          # The SQLite database file
+│   ├── adk_local_mcp.db     # The SQLite database file
 │   └── __init__.py
 ├── remote_mcp_agent/        # Example agent for connecting to a remote MCP server
 │   ├── agent.py             # The ADK agent configured for a remote MCP
+│   ├── prompt.py            # Prompt for the remote MCP agent
 │   └── __init__.py
 ├── .env                   # For GOOGLE_API_KEY (ensure it's in .gitignore if repo is public)
 ├── requirements.txt       # Python dependencies
@@ -24,41 +27,27 @@ adk-mcp/
 
 ### 1. Prerequisites
 
-- Python 3.8 or newer
+- Python 3.13 or newer
 - Access to a terminal or command prompt
 
 ### 2. Create and Activate Virtual Environment
 
 It's highly recommended to use a virtual environment to manage project dependencies.
 
-```bash
-# Create a virtual environment (e.g., named .venv)
-python3 -m venv .venv
-```
-
-Activate the virtual environment:
-
-On macOS/Linux:
-
-```bash
-# Activate virtual environment
-source .venv/bin/activate
-```
-
 On Windows:
 
-```bash
+```pwsh
 # Activate virtual environment
 .venv\Scripts\activate
 ```
 
 ### 3. Install Dependencies
 
-Install all required Python packages using pip:
+Install all required Python packages using uv:
 
 ```bash
-# Install all dependencies from requirements.txt
-pip install -r requirements.txt
+# Install all dependencies from pyproject.toml
+uv sync
 ```
 
 ### 4. Set Up Gemini API Key (for the ADK Agent)
@@ -78,17 +67,17 @@ The ADK agent in this project uses a Gemini model. You'll need a Gemini API key.
 
 ### 5. Create the SQLite Database and Tables
 
-The project includes a script to create and populate the SQLite database (`database.db`) with some initial tables (`users`, `todos`) and dummy data.
+The project includes a script to create and populate the SQLite database (`adk_local_mcp.db`) with some initial tables (`users`, `todos`) and dummy data.
 
 Navigate to the `local_mcp` directory and run the script:
 
 ```bash
 cd local_mcp
-python3 create_db.py
+python create_db.py
 cd ..
 ```
 
-This will create `local_mcp/database.db` if it doesn't already exist.
+This will create `local_mcp/adk_local_mcp.db` if it doesn't already exist.
 
 ## Running the Agent and MCP Server
 
@@ -100,13 +89,13 @@ To run the agent:
 2. Execute the agent script:
 
     ```bash
-    python3 local_mcp/agent.py
+    python local_mcp/agent.py
     ```
 
 This will:
 
 - Start the `agent.py` script.
-- The agent, upon initializing the `MCPToolset`, will execute the `python3 local_mcp/server.py` command.
+- The agent, upon initializing the `MCPToolset`, will execute the `python local_mcp/server.py` command.
 - The `server.py` (MCP server) will start and listen for tool calls from the agent via stdio.
 - The agent will then be ready to process your instructions (which you would typically provide in a client application or test environment that uses this agent).
 
@@ -175,8 +164,8 @@ The agent (`local_mcp/agent.py`) has specific instructions on how to use these t
 - **`McpError: Input must be an instance of Schema, got <class 'NoneType'>` (Client-side Error)**:
   - This error might occur if `adk_to_mcp_tool_type` in `server.py` generates a `None` input schema for a tool. The `list_db_tables` tool in `server.py` includes a `dummy_param` as a workaround for this known issue with parameter-less functions. The server also has a patch to provide a default schema if one is `None`.
 - **Database Errors (e.g., "no such table")**:
-  - Ensure you have run `python3 local_mcp/create_db.py` to create the `database.db` file and its tables.
-  - Verify the `DATABASE_PATH` in `local_mcp/server.py` correctly points to `local_mcp/database.db`.
+  - Ensure you have run `python local_mcp/create_db.py` to create the `adk_local_mcp.db` file and its tables.
+  - Verify the `DATABASE_PATH` in `local_mcp/server.py` correctly points to `local_mcp/adk_local_mcp.db`.
 - **API Key Issues**:
   - Make sure your `GOOGLE_API_KEY` is correctly set in the `.env` file in the project root and that the file is being loaded.
 - **MCP Server Log**:
