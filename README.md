@@ -7,27 +7,42 @@ This project demonstrates an Agent Development Kit (ADK) agent that interacts wi
 ```project structure
 adk-mcp/
 ├── local_mcp/
-│   ├── .env.example         # Example environment file with API key
-│   ├── prompt.py            # Prompt for the local SQLite DB agent
-│   ├── agent.py             # The ADK agent for the local SQLite DB
+│   ├── .env.example              # Example environment file with API key
+│   ├── prompt.py                 # Prompt for the local SQLite DB agent
+│   ├── agent.py                  # The ADK agent for the local SQLite DB
+│   ├── mcp_server_activity.log   # Log file for MCP server activity
+│   ├── db_utils.py               # Utility functions for database operations
 │   ├── server.py            # The MCP server exposing database tools
 │   ├── create_db.py         # Script to initialize the SQLite database
 │   ├── adk_local_mcp.db     # The SQLite database file
-│   └── __init__.py
+│   ├── README.md            # Local MCP Server for ADK Agent explanation
+│   └── __init__.py          # Initialization file for the local MCP package
+├── agent_compare/              # Example agent for comparing multiple MCP servers
+│   ├── adk_agent/                # Traditional ADK agent with no MCP
+│   │   ├── agent.py              # The ADK agent
+│   │   └── __init__.py
+│   ├── mcp_tool_agent/           # ADK agent using MCPToolset to connect to remote MCP servers
+│   │   ├── agent.py              # The ADK agent
+│   │   └── __init__.py
 ├── remote_mcp_agent/        # Example agent for connecting to a remote MCP server
-│   ├── agent.py             # The ADK agent configured for a remote MCP
+│   ├── agent.py             # The ADK agent configured for a remote MCP server(Notion)
 │   ├── prompt.py            # Prompt for the remote MCP agent
 │   └── __init__.py
-├── .env                   # For GOOGLE_API_KEY (ensure it's in .gitignore if repo is public)
-├── requirements.txt       # Python dependencies
-└── readme.md              # This file
+├── .env.example           # For GOOGLE_API_KEY
+├── pyproject.toml         # Python project metadata
+├── uv.lock                # uv lock file for managing dependencies
+├── .gitignore             # Git ignore file
+├── LICENSE.txt            # MIT License file
+├── python-version         # Python version file
+├── main.py                # uv generated main file
+└── README.md              # Project README
 ```
 
 ## Setup Instructions
 
 ### 1. Prerequisites
 
-- Python 3.13 or newer
+- Python 3.13 or later
 - Access to a terminal or command prompt
 
 ### 2. Create and Activate Virtual Environment
@@ -37,6 +52,8 @@ It's highly recommended to use a virtual environment to manage project dependenc
 On Windows:
 
 ```pwsh
+# Create virtual environment
+uv init
 # Activate virtual environment
 .venv\Scripts\activate
 ```
@@ -46,13 +63,13 @@ On Windows:
 Install all required Python packages using uv:
 
 ```bash
-# Install all dependencies from pyproject.toml
+# Install all dependencies from pyproject.toml and uv.lock
 uv sync
 ```
 
 ### 4. Set Up Gemini API Key (for the ADK Agent)
 
-The ADK agent in this project uses a Gemini model. You'll need a Gemini API key.
+The ADK agent in this project uses a Gemini model. Need a Gemini API key.
 
 1. Create or use an existing [Google AI Studio](https://aistudio.google.com/) account.
 2. Get your Gemini API key from the [API Keys section](https://aistudio.google.com/app/apikeys).

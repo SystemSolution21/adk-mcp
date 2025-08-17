@@ -11,3 +11,9 @@ wheels/
 
 # Environment variables
 .env
+
+# Logs
+*.log
+
+# Database files
+*.db
