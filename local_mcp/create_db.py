@@ -2,6 +2,8 @@ import sqlite3
 from pathlib import Path
 from sqlite3 import Connection, Cursor
 
+from local_mcp.logger import logger
+
 # ---- Database Path ----
 DATABASE_PATH: str = str((Path(__file__).parent / "adk_local_mcp.db").resolve())
 
@@ -16,7 +18,7 @@ def create_database() -> None:
     cursor: Cursor = conn.cursor()
 
     if not db_exists:
-        print(f"Creating new database at {DATABASE_PATH}...")
+        logger.info(msg=f"Creating new database at {DATABASE_PATH}...")
         # Create users table
         cursor.execute(""" 
             CREATE TABLE IF NOT EXISTS users (
@@ -25,7 +27,7 @@ def create_database() -> None:
                 email TEXT UNIQUE NOT NULL
             )
         """)
-        print("Users table created successfully.")
+        logger.info(msg="Users table created successfully.")
 
         # Create todos table
         cursor.execute("""
@@ -37,7 +39,7 @@ def create_database() -> None:
                 FOREIGN KEY (user_id) REFERENCES users (id)
             )
         """)
-        print("Todos table created successfully.")
+        logger.info(msg="Todos table created successfully.")
 
         # Insert dummy users
         dummy_users: list[tuple[str, str]] = [
@@ -51,7 +53,7 @@ def create_database() -> None:
             """,
             dummy_users,
         )
-        print(f"{len(dummy_users)} Dummy users inserted successfully.")
+        logger.info(msg=f"{len(dummy_users)} Dummy users inserted successfully.")
 
         # Insert dummy todos
         dummy_todos: list[tuple[int, str, int]] = [
@@ -66,12 +68,15 @@ def create_database() -> None:
         """,
             dummy_todos,
         )
-        print(f"{len(dummy_todos)} Dummy todos inserted successfully.")
+        logger.info(msg=f"{len(dummy_todos)} Dummy todos inserted successfully.")
 
         conn.commit()
-        print("Database created and populated successfully.")
+
+        logger.info(msg="Database created and populated successfully.")
+
     else:
-        print(f"Database already exists at {DATABASE_PATH}. No changes made.")
+        logger.info(msg=f"Database already exists at {DATABASE_PATH}. No changes made.")
+
     cursor.close()
     conn.close()
 
