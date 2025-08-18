@@ -12,6 +12,7 @@ adk-mcp/
 │   ├── agent.py                  # The ADK agent for the local SQLite DB
 │   ├── mcp_server_activity.log   # Log file for MCP server activity
 │   ├── db_utils.py               # Utility functions for database operations
+│   ├── logger.py                 # Logging configuration for the MCP server
 │   ├── server.py            # The MCP server exposing database tools
 │   ├── create_db.py         # Script to initialize the SQLite database
 │   ├── adk_local_mcp.db     # The SQLite database file
